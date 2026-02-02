@@ -1,0 +1,41 @@
+{
+  "name": "logtower-monorepo",
+  "version": "0.1.0",
+  "description": "Portable threat hunting and forensic triage suite",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:all": "npm run build:rust && npm run build",
+    "build:rust": "cd packages/parser-rust && cargo build --release",
+    "postinstall": "npm run build:rust || echo 'Rust build skipped (cargo not found)'",
+    "test": "npm run test --workspaces",
+    "test:smoke": "./scripts/smoke_test_cli.sh",
+    "test:smoke:cred": "./scripts/smoke_test_cred.sh",
+    "lint": "npm run lint --workspaces",
+    "test:regression:discovery": "npm run build && node scripts/test_regression_discovery.mjs",
+    "test:regression:impact": "npm run build && node scripts/test_regression_impact.mjs",
+    "test:unique-ids": "node scripts/verify_unique_ids.mjs"
+  },
+  "keywords": [
+    "forensics",
+    "threat-hunting",
+    "security",
+    "cli"
+  ],
+  "author": "NeonShapeshifter <201814081+NeonShapeshifter@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^25.0.9",
+    "eslint": "^9.39.2",
+    "globals": "^17.3.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
+  },
+  "dependencies": {
+    "uuid": "^13.0.0"
+  }
+}

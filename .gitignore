@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.DS_Store
+*.log
+packages/ingest-evtx/.venv/
+packages/ingest-evtx/__pycache__/
+*.evtx
+design/
+!design/*.md
+target/
+.gemini/
+datasets/samples/

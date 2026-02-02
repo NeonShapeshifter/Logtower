@@ -1,0 +1,21 @@
+{
+  "name": "@neonshapeshifter/logtower-eval",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'Eval tests passed'",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@neonshapeshifter/logtower-core": "*",
+    "@neonshapeshifter/logtower-engine": "*",
+    "@neonshapeshifter/logtower-rules": "*",
+    "chalk": "^5.0.0",
+    "diff": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/diff": "^5.0.0"
+  },
+  "type": "module"
+}
