@@ -14,6 +14,9 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
+      "@neonshapeshifter/logtower-core": ["packages/core/dist/index.d.ts"],
+      "@neonshapeshifter/logtower-engine": ["packages/engine/dist/index.d.ts"],
+      "@neonshapeshifter/logtower-rules": ["packages/rules/dist/index.d.ts"]
     }
   }
 }

@@ -13,3 +13,4 @@ design/
 target/
 .gemini/
 datasets/samples/
+*.tsbuildinfo
