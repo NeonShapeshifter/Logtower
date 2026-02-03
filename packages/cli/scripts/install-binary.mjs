@@ -89,14 +89,24 @@ async function main() {
         console.log('[Install] Binary downloaded successfully.');
     } catch (error) {
         console.warn(`[Install] Download failed: ${error.message}`);
+        
+        // Check if Rust source exists before trying to build
+        const rustSourceDir = path.resolve(__dirname, '../../../parser-rust');
+        const cargoToml = path.join(rustSourceDir, 'Cargo.toml');
+
+        if (!fs.existsSync(cargoToml)) {
+             console.error('[Install] CRITICAL: Pre-built binary not found and Rust source code is missing.');
+             console.error('          This npm package does not include the Rust source code required to build from scratch.');
+             console.error('          Please install from a cloned git repository or wait for a binary release.');
+             process.exit(1);
+        }
+
         console.warn('[Install] Falling back to cargo build...');
         
         try {
             // Attempt to build from source if cargo is available
-            // This assumes the user has the full source code (e.g. via git clone), not just the npm package
-            // If installed via npm registry, source for rust might not be there unless included in "files"
             execSync('cargo build --release', { 
-                cwd: path.resolve(__dirname, '../../../parser-rust'),
+                cwd: rustSourceDir,
                 stdio: 'inherit' 
             });
             // Try copy again
