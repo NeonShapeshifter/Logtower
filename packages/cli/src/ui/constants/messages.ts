@@ -1,3 +1,9 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pkg = require('../../../package.json');
+
+const VERSION = `v${pkg.version}`;
+
 /**
  * User-facing message strings for the Logtower TUI
  * Centralized strings for consistent messaging and easy i18n
@@ -6,10 +12,10 @@
 // Application info
 export const APP_INFO = {
   NAME: 'LOGTOWER',
-  VERSION: 'v0.1.2',
+  VERSION: VERSION,
   TAGLINE: 'High-Performance Forensics Suite',
-  VERSION_LABEL: 'v0.1.2 (Rust Engine Enabled)',
-  HEADER_TITLE: 'HEADER: Logtower v0.1.2',
+  VERSION_LABEL: `${VERSION} (Rust Engine Enabled)`,
+  HEADER_TITLE: `HEADER: Logtower ${VERSION}`,
 } as const;
 
 // Error messages

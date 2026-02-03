@@ -30,7 +30,7 @@ program
 program
   .command('hunt')
   .description('Run detection (headless with --json/--report/--summary, TUI otherwise)')
-  .argument('<file>', 'Path to EVTX or JSONL file')
+  .argument('<file...>', 'Path to EVTX or JSONL file')
   .option('--ruleset <name>', 'Ruleset to use (lolbas, discovery, lateral, defense, cred, all)', 'lolbas')
   .option('--report', 'Generate a summary report (headless)')
   .option('--summary', 'Generate a high-level summary report (headless)')
@@ -39,7 +39,10 @@ program
   .option('--hours <number>', 'Analyze only the last N hours')
   .option('--limit <number>', 'Limit number of events processed')
   .option('--intel <path>', 'Path to intel feeds directory for IOC enrichment')
-  .action(async (file, options) => {
+  .action(async (fileParts, options) => {
+    // Reconstruct path from parts (handles unquoted paths with spaces)
+    const file = fileParts.join(' ');
+
     if (!fs.existsSync(file)) {
         if (options.json) console.log(JSON.stringify({ error: "File not found", path: file }));
         else console.error(`Error: File not found: ${file}`);
