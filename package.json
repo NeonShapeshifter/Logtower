@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces",
+    "build": "npm run build -w @neonshapeshifter/logtower-core && npm run build -w @neonshapeshifter/logtower-engine && npm run build -w @neonshapeshifter/logtower-rules && npm run build -w @neonshapeshifter/logtower-eval && npm run build -w @neonshapeshifter/logtower",
     "build:all": "npm run build:rust && npm run build",
     "build:rust": "cd packages/parser-rust && cargo build --release",
     "postinstall": "npm run build:rust || echo 'Rust build skipped (cargo not found)'",
