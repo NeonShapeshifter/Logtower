@@ -11,6 +11,12 @@
   "bin": {
     "logtower": "./dist/index.js"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc && node scripts/copy-bin.mjs",
     "postinstall": "node scripts/install-binary.mjs",
