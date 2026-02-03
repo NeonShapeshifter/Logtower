@@ -57,7 +57,7 @@ const DetailView = ({ rule }: { rule: Rule }) => {
                 <Box flexDirection="column" marginBottom={1}>
                     <Text bold underline>DETECTED BY (Logic):</Text>
                     {Object.entries(rule.detection.selection).map(([key, val]) => (
-                        <Text key={key}> - {key}: <Text color="green">{Array.isArray(val) ? val.join(' OR ') : val}</Text></Text>
+                        <Text key={key}> - {key}: <Text color="green">{Array.isArray(val) ? val.join(' OR ') : String(val)}</Text></Text>
                     ))}
                 </Box>
 
