@@ -2,9 +2,9 @@
 set -e
 
 # Configuration
-SAMPLE="datasets/samples/EVTX-ATTACK-SAMPLES/Credential Access/babyshark_mimikatz_powershell.evtx"
+SAMPLE="datasets/samples/smoke_sample_cred.jsonl"
 CLI_BIN="packages/cli/dist/index.js"
-EXPECTED_RULE="CRED_001_PS_MIMIKATZ_LOAD"
+EXPECTED_RULE="CRED_007_NTDS_THEFT"
 
 # Color codes
 RED='\033[0;31m'

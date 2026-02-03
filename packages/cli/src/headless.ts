@@ -69,9 +69,12 @@ export const runHeadless = async (
         process.exit(1);
     }
 
-    // Only support EVTX here
-    if (!filePath.toLowerCase().endsWith('.evtx')) {
-         console.error("Error: runHeadless only supports .evtx files. For JSONL use the CLI directly.");
+    // Determine input type
+    const isJson = filePath.toLowerCase().endsWith('.json') || filePath.toLowerCase().endsWith('.jsonl');
+    const isEvtx = filePath.toLowerCase().endsWith('.evtx');
+
+    if (!isEvtx && !isJson) {
+         console.error("Error: runHeadless supports .evtx, .json, or .jsonl files.");
          process.exit(1);
     }
 
@@ -84,13 +87,16 @@ export const runHeadless = async (
 
     const engine = new DetectionEngine(rules);
 
-    let rustParser: string;
-    try {
-        rustParser = resolveParserBinary();
-    } catch (err: any) {
-        if (outputJson) console.log(JSON.stringify({ error: err.message }));
-        else console.error(`Error: ${err.message}`);
-        process.exit(1);
+    // Resolve parser if EVTX
+    let rustParser: string | undefined;
+    if (isEvtx) {
+        try {
+            rustParser = resolveParserBinary();
+        } catch (err: any) {
+            if (outputJson) console.log(JSON.stringify({ error: err.message }));
+            else console.error(`Error: ${err.message}`);
+            process.exit(1);
+        }
     }
 
     // Guardrails
@@ -112,49 +118,61 @@ export const runHeadless = async (
     let processedCount = 0;
     let intelHits = 0;
 
-    const proc = spawn(rustParser, [filePath]);
-
-    proc.stdout.on('data', (data) => {
-        const lines = data.toString().split('\n');
-        for (const line of lines) {
-            if (processedCount >= limitCount) {
-                proc.kill();
-                break;
-            }
-
-            if (!line.trim()) continue;
-            try {
-                const rawJson = JSON.parse(line);
-                const event = normalizeEvent(rawJson);
-                if (event) {
-                    // Time Check
-                    if (cutoffTime > 0) {
-                        const eventTs = new Date(event.timestamp).getTime();
-                        if (eventTs < cutoffTime) continue;
-                    }
-
-                    // Check Intel on the event
-                    if (intel.isLoaded()) {
-                        const intelMatch = intel.checkEvent(event);
-                        if (intelMatch) {
-                            intelHits++;
-                            // Attach intel to event for potential later use
-                            (event as any)._intel = intelMatch;
-                        }
-                    }
-
-                    engine.processEvent(event);
-                    processedCount++;
+    // Stream Processor Function
+    const processStream = (stream: any) => {
+        stream.on('data', (data: any) => {
+            const lines = data.toString().split('\n');
+            for (const line of lines) {
+                if (processedCount >= limitCount) {
+                    if (isEvtx && proc) proc.kill();
+                    else if (stream.destroy) stream.destroy();
+                    break;
                 }
-            } catch {}
+
+                if (!line.trim()) continue;
+                try {
+                    const rawJson = JSON.parse(line);
+                    const event = normalizeEvent(rawJson);
+                    if (event) {
+                        // Time Check
+                        if (cutoffTime > 0) {
+                            const eventTs = new Date(event.timestamp).getTime();
+                            if (eventTs < cutoffTime) continue;
+                        }
+
+                        // Check Intel on the event
+                        if (intel.isLoaded()) {
+                            const intelMatch = intel.checkEvent(event);
+                            if (intelMatch) {
+                                intelHits++;
+                                (event as any)._intel = intelMatch;
+                            }
+                        }
+
+                        engine.processEvent(event);
+                        processedCount++;
+                    }
+                } catch {}
+            }
+        });
+
+        if (isEvtx) {
+             stream.stderr.on('data', () => {});
+             stream.on('close', () => finish());
+        } else {
+             stream.on('end', () => finish());
+             stream.on('error', (err: any) => console.error(err));
         }
-    });
+    };
 
-    proc.stderr.on('data', () => {});
-
-    proc.on('close', () => {
-        finish();
-    });
+    let proc: any;
+    if (isEvtx && rustParser) {
+        proc = spawn(rustParser, [filePath]);
+        processStream(proc.stdout);
+    } else {
+        const fileStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+        processStream(fileStream);
+    }
 
     async function finish() {
         const findings = engine.getFindings();

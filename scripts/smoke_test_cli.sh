@@ -2,7 +2,7 @@
 set -e
 
 # Configuration
-SAMPLE="datasets/samples/EVTX-ATTACK-SAMPLES/Execution/exec_sysmon_lobin_regsvr32_sct.evtx"
+SAMPLE="datasets/samples/smoke_sample.jsonl"
 CLI_BIN="packages/cli/dist/index.js"
 EXPECTED_RULE="LOLBAS_006_REGSVR32"
 

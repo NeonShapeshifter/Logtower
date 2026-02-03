@@ -53,8 +53,8 @@ program
     const isHeadless = options.json || options.report || options.summary;
 
     if (isHeadless) {
-        // Handle EVTX via Headless Mode
-        if (file.toLowerCase().endsWith('.evtx')) {
+        // Handle EVTX/JSON via Headless Mode
+        if (file.toLowerCase().endsWith('.evtx') || file.toLowerCase().endsWith('.json') || file.toLowerCase().endsWith('.jsonl')) {
             const filterMode = options.filter === 'ALL' ? 'ALL' : 'IMPORTANT';
             const hours = options.hours ? parseFloat(options.hours) : undefined;
             const limit = options.limit ? parseInt(options.limit) : undefined;
@@ -70,74 +70,9 @@ program
             return;
         }
 
-        // Handle JSONL (Legacy/Debug stream)
-        let rules = BASE_RULES;
-        if (options.ruleset) {
-            if (options.ruleset === 'all') {
-                rules = RULESETS.all;
-            } else if (RULESETS[options.ruleset as keyof typeof RULESETS]) {
-                rules = RULESETS[options.ruleset as keyof typeof RULESETS];
-            } else {
-                console.error(`Error: Unknown ruleset '${options.ruleset}'. Available: ${Object.keys(RULESETS).join(', ')}, all`);
-                process.exit(1);
-            }
-        }
-
-        const engine = new DetectionEngine(rules);
-        const fileStream = fs.createReadStream(file);
-        const rl = readline.createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-        });
-
-        const cutoffTime = options.hours ? Date.now() - (parseFloat(options.hours) * 3600000) : 0;
-        const limitCount = options.limit ? parseInt(options.limit) : Infinity;
-
-        if (!options.json) {
-            console.log(`Running detection on ${file} using ruleset: ${options.ruleset}...`);
-            if (options.hours) console.log(`Time Filter: Last ${options.hours} hours`);
-            if (options.limit) console.log(`Event Limit: ${options.limit}`);
-        }
-
-        let count = 0;
-        for await (const line of rl) {
-            if (!line.trim()) continue;
-            try {
-                const raw = JSON.parse(line);
-                const event = normalizeEvent(raw);
-                if (!event) continue;
-
-                if (cutoffTime > 0 && event.timestamp) {
-                    const eventTs = new Date(event.timestamp).getTime();
-                    if (eventTs < cutoffTime) continue;
-                }
-
-                engine.processEvent(event);
-                count++;
-
-                if (count >= limitCount) break;
-            } catch (e) {}
-        }
-
-        const findings = engine.getFindings();
-
-        if (options.json) {
-            console.log(JSON.stringify(findings, null, 2));
-        } else {
-            console.log(`\n=== Detection Report ===`);
-            if (findings.length === 0) {
-                console.log("No findings.");
-            }
-            for (const finding of findings) {
-                console.log(`[ALERT] [${finding.id}] ${finding.rule_id}: ${finding.title}`);
-                console.log(`Severity: ${finding.severity} | Evidence Count: ${finding.evidence.length}`);
-                const lastEv = finding.evidence[finding.evidence.length - 1];
-                console.log(`Sample Evidence: ${lastEv.summary}`);
-                console.log(`-`.repeat(40));
-            }
-            console.log(`Processed ${count} events.`);
-        }
-        return;
+        // Fallback or other formats? Currently only supporting the above via runHeadless.
+        console.error("Error: Unsupported file format for headless mode. Use .evtx, .json, or .jsonl");
+        process.exit(1);
     }
 
     // No output flags -> TUI with initialFile
