@@ -17,7 +17,7 @@ export interface GraphEdge {
   count: number;
 }
 
-const SEVERITY_WEIGHT = {
+const SEVERITY_WEIGHT: Record<string, number> = {
     'CRITICAL': 4,
     'HIGH': 3,
     'MEDIUM': 2,
