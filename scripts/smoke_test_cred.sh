@@ -17,7 +17,7 @@ echo "---------------------------------------------------"
 
 # 1. Ensure CLI is built
 echo "Building CLI..."
-npm run build --workspace=@neonshapeshifter/logtower-cli > /dev/null
+npm run build --workspace=@neonshapeshifter/logtower > /dev/null
 
 # 2. Run Headless Hunt
 echo "Running hunt on sample: $(basename "$SAMPLE")"
