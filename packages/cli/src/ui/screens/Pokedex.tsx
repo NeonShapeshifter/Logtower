@@ -64,7 +64,7 @@ const DetailView = ({ rule }: { rule: Rule }) => {
                 {/* RESPONSE PROTOCOL */}
                 <Box flexDirection="column">
                     <Text bold underline>RESPONSE (The Protocol):</Text>
-                    {responseSteps.map((step, i) => (
+                    {responseSteps.map((step: string, i: number) => (
                         <Text key={i} color="white">{step}</Text>
                     ))}
                 </Box>
