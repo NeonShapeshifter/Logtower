@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "cd packages/core && tsc && cd ../engine && tsc && cd ../rules && tsc && cd ../eval && tsc && cd ../cli && tsc && node scripts/copy-bin.mjs",
+    "build": "tsc -p packages/core && tsc -p packages/engine && tsc -p packages/rules && tsc -p packages/eval && tsc -p packages/cli && node packages/cli/scripts/copy-bin.mjs",
     "build:all": "npm run build:rust && npm run build",
     "build:rust": "cd packages/parser-rust && cargo build --release",
     "postinstall": "npm run build:rust || echo 'Rust build skipped (cargo not found)'",
