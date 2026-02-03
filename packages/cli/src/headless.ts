@@ -4,43 +4,7 @@ import { Finding, sortFindings, filterFindings, getSampleEvidence, normalizeEven
 import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Resolve parser binary: prefer bundled binary, fallback to monorepo dev path
-function resolveParserBinary(): string {
-    // Production: bundled binary in package bin/ directory
-    const bundledBin = path.join(__dirname, '../bin/logtower-parser');
-    if (fs.existsSync(bundledBin)) {
-        return bundledBin;
-    }
-
-    // Development: monorepo structure
-    const REPO_ROOT = path.resolve(__dirname, '../../..');
-    const devBin = path.join(REPO_ROOT, 'packages/parser-rust/target/release/logtower-parser');
-    if (fs.existsSync(devBin)) {
-        return devBin;
-    }
-
-    // Debug build fallback
-    const debugBin = path.join(REPO_ROOT, 'packages/parser-rust/target/debug/logtower-parser');
-    if (fs.existsSync(debugBin)) {
-        return debugBin;
-    }
-
-    throw new Error(
-        'Logtower Parser Binary not found.\n\n' +
-        'If you are running from source (Development Mode):\n' +
-        '  You need to compile the Rust parser manually.\n' +
-        '  Run the following command in the project root:\n' +
-        '    cd packages/parser-rust && cargo build --release\n\n' +
-        'If you are running the installed CLI:\n' +
-        '  The binary should have been bundled. Please reinstall the package.\n' +
-        '  Missing path: ' + bundledBin
-    );
-}
+import { resolveParserBinary } from './utils.js';
 
 export const runHeadless = async (
     filePath: string,

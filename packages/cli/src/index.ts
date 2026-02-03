@@ -11,6 +11,9 @@ import updateNotifier from 'update-notifier';
 const require = createRequire(import.meta.url);
 const pkg = require('../package.json');
 
+// DEBUG: Diagnose Windows argument parsing issues
+console.log("DEBUG: Raw Args:", process.argv.slice(2));
+
 updateNotifier({ pkg }).notify();
 
 const program = new Command();

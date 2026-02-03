@@ -11,6 +11,7 @@ import { RULESETS } from '@neonshapeshifter/logtower-rules';
 import { LogtowerEvent, normalizeEvent } from '@neonshapeshifter/logtower-core';
 import { CommandContext, CommandResult } from './types.js';
 import { BUFFER_LIMITS } from '../constants/index.js';
+import { resolveParserBinary } from '../../utils.js';
 
 /**
  * Execute the hunt command
@@ -46,7 +47,12 @@ export function runHunt(
     intelStats = intel.loadFromDirectory(feedsPath);
   }
 
-  const rustParser = path.join(repoRoot, 'packages/parser-rust/target/release/logtower-parser');
+  let rustParser: string;
+  try {
+      rustParser = resolveParserBinary();
+  } catch (e: any) {
+      return { success: false, error: e.message };
+  }
 
   // Initialize state for hunt
   setState(prev => ({
