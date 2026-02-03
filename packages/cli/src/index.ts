@@ -11,9 +11,6 @@ import updateNotifier from 'update-notifier';
 const require = createRequire(import.meta.url);
 const pkg = require('../package.json');
 
-// DEBUG: Diagnose Windows argument parsing issues
-console.log("DEBUG: Raw Args:", process.argv.slice(2));
-
 updateNotifier({ pkg }).notify();
 
 const program = new Command();
@@ -44,7 +41,8 @@ program
   .option('--intel <path>', 'Path to intel feeds directory for IOC enrichment')
   .action(async (fileParts, options) => {
     // Reconstruct path from parts (handles unquoted paths with spaces)
-    const file = fileParts.join(' ');
+    // Remove surrounding quotes if present (PowerShell/Windows may pass them)
+    const file = fileParts.join(' ').replace(/^["']|["']$/g, '');
 
     if (!fs.existsSync(file)) {
         if (options.json) console.log(JSON.stringify({ error: "File not found", path: file }));
