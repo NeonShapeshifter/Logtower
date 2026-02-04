@@ -77,13 +77,6 @@ export function dispatchCommand(
   const parts = parseCommandLine(rawInput.trim());
   const rawCommand = parts[0]?.toLowerCase() || '';
   const args = parts.slice(1);
-
-  // DEBUG: Show parsed arguments
-  console.log("[DEBUG] Raw input:", JSON.stringify(rawInput));
-  console.log("[DEBUG] Parsed parts:", JSON.stringify(parts));
-  console.log("[DEBUG] Command:", rawCommand);
-  console.log("[DEBUG] Args:", JSON.stringify(args));
-
   const command = COMMAND_ALIASES[rawCommand] || rawCommand;
 
   const { getState, setState, showError, goBackToSplash } = ctx;
