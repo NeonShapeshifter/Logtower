@@ -19,19 +19,19 @@ program
   .name('logtower')
   .description('Logtower TUI and Headless CLI')
   .version(pkg.version)
-  .option('--ruleset <name>', 'Ruleset to use (lolbas, discovery, lateral, defense, cred, all)', 'lolbas')
+  .option('--ruleset <name>', 'Ruleset to use (lolbas, discovery, lateral, defense, cred, all)', 'all')
   .action((options) => {
       // Default action (no command): Launch TUI
       render(React.createElement(App, {
-          ruleset: options.ruleset || 'lolbas'
+          ruleset: options.ruleset || 'all'
       }));
   });
 
 program
   .command('hunt')
   .description('Run detection (headless with --json/--report/--summary, TUI otherwise)')
-  .argument('<file...>', 'Path to EVTX or JSONL file')
-  .option('--ruleset <name>', 'Ruleset to use (lolbas, discovery, lateral, defense, cred, all)', 'lolbas')
+  .argument('<file>', 'Path to EVTX or JSONL file')
+  .option('--ruleset <name>', 'Ruleset to use (lolbas, discovery, lateral, defense, cred, all)', 'all')
   .option('--report', 'Generate a summary report (headless)')
   .option('--summary', 'Generate a high-level summary report (headless)')
   .option('--filter <mode>', 'Filter for report (IMPORTANT or ALL)', 'IMPORTANT')
@@ -39,17 +39,17 @@ program
   .option('--hours <number>', 'Analyze only the last N hours')
   .option('--limit <number>', 'Limit number of events processed')
   .option('--intel <path>', 'Path to intel feeds directory for IOC enrichment')
-  .action(async (fileParts, options) => {
-    // Reconstruct path from parts (handles unquoted paths with spaces)
+  .action(async (file, options) => {
     // Remove surrounding quotes if present (PowerShell/Windows may pass them)
-    const file = fileParts.join(' ').replace(/^["']|["']$/g, '');
+    file = file.replace(/^["']|["']$/g, '');
 
     // DEBUG: Show parsed options
     console.log('[DEBUG] Parsed options:', JSON.stringify({
       ruleset: options.ruleset,
       json: options.json,
       report: options.report,
-      summary: options.summary
+      summary: options.summary,
+      file: file
     }));
 
     if (!fs.existsSync(file)) {

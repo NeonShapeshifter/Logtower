@@ -24,7 +24,7 @@ export const COMMANDS = {
 
 // Default values
 export const DEFAULTS = {
-  RULESET: 'lolbas',
+  RULESET: 'all',
 } as const;
 
 // Resolve command alias to full command name
