@@ -11,6 +11,7 @@ import { RULESETS } from '@neonshapeshifter/logtower-rules';
 import { normalizeEvent } from '@neonshapeshifter/logtower-core';
 import { CommandContext, CommandResult } from './types.js';
 import { ERROR_MESSAGES } from '../constants/index.js';
+import { resolveParserBinary } from '../../utils.js';
 
 /**
  * Execute the track command
@@ -41,7 +42,15 @@ export function runTrack(
   const tracker = new LateralTracker();
   const allRules = RULESETS.all;
   const engine = new DetectionEngine(allRules);
-  const rustParser = path.join(repoRoot, 'packages/parser-rust/target/release/logtower-parser');
+
+  let rustParser: string;
+  try {
+    rustParser = resolveParserBinary();
+  } catch (e: any) {
+    showError(e.message);
+    setState(prev => ({ ...prev, isProcessing: false }));
+    return { success: false, error: e.message };
+  }
 
   try {
     const proc = spawn(rustParser, [targetFile]);

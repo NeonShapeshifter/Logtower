@@ -371,7 +371,7 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
                 {/* 3. INSPECTOR */}
                 <Box flexDirection="column" height={inspectorHeight} borderStyle="single" borderColor="yellow" marginTop={1}>
                     <Box justifyContent="space-between">
-                        <Text bold color="yellow" underline>INSPECTOR (55%)</Text>
+                        <Text bold color="yellow" underline>INSPECTOR</Text>
                         <Text dimColor>{scrollOffset}/{maxScroll} (PgUp/PgDn)</Text>
                     </Box>
                     <Box marginTop={1} flexDirection="column" overflow="hidden">

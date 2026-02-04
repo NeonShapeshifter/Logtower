@@ -43,15 +43,6 @@ program
     // Remove surrounding quotes if present (PowerShell/Windows may pass them)
     file = file.replace(/^["']|["']$/g, '');
 
-    // DEBUG: Show parsed options
-    console.log('[DEBUG] Parsed options:', JSON.stringify({
-      ruleset: options.ruleset,
-      json: options.json,
-      report: options.report,
-      summary: options.summary,
-      file: file
-    }));
-
     if (!fs.existsSync(file)) {
         if (options.json) console.log(JSON.stringify({ error: "File not found", path: file }));
         else console.error(`Error: File not found: ${file}`);
