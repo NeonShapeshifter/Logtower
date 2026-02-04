@@ -20,6 +20,7 @@ export const LogtowerEventSchema = z.object({
     start_function: z.string().optional().nullable(),
     start_address: z.string().optional().nullable(),
     granted_access: z.string().optional().nullable(),
+    call_trace: z.string().optional().nullable(),
   }).optional(),
   network: z.object({
     src_ip: z.string().optional().nullable(),
@@ -82,6 +83,11 @@ export const LogtowerEventSchema = z.object({
     file_name: z.string().optional().nullable(), // Local file
     url: z.string().optional().nullable(), // Remote URL
     client_app: z.string().optional().nullable(), // processPath equivalent
+  }).optional(),
+  // Directory Service Access fields (Event ID 4662)
+  directory_service: z.object({
+    object_type: z.string().optional().nullable(),
+    properties: z.union([z.string(), z.array(z.string())]).optional().nullable(),
   }).optional(),
   // Identity fields
   kerberos: z.object({
@@ -186,6 +192,10 @@ export const FindingSchema = z.object({
   kerberos: z.object({
     service_name: z.string().optional().nullable(),
     failure_code: z.string().optional().nullable(),
+  }).optional(),
+  directory_service: z.object({
+    object_type: z.string().optional().nullable(),
+    properties: z.union([z.string(), z.array(z.string())]).optional().nullable(),
   }).optional(),
   intel: z.object({
       match: z.boolean(),

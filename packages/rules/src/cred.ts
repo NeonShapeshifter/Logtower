@@ -101,8 +101,8 @@ export const CRED_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '4662',
-        'object_type': 'domainDNS', // or specific GUIDs for DS-Replication-Get-Changes
-        'properties': ['*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*', '*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*'] // Replication rights
+        'directory_service.object_type': 'domainDNS', // or specific GUIDs for DS-Replication-Get-Changes
+        'directory_service.properties': ['*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*', '*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*'] // Replication rights
       }
     },
     description: "Attacker is simulating a Domain Controller to request password hashes (replication data) from a real DC. Requires 'Replicating Directory Changes' rights. They can pull KRBTGT hash.",
@@ -122,8 +122,8 @@ export const CRED_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '10', // Sysmon Process Access
-        'target_image': '*lsass.exe',
-        'granted_access': ['0x1F0FFF', '0x1410', '0x1010'] // Suspicious access masks
+        'process.target_image': '*lsass.exe',
+        'process.granted_access': ['0x1F0FFF', '0x1410', '0x1010'] // Suspicious access masks
       }
     },
     description: "A process attempted to read the memory of the Local Security Authority Subsystem Service (LSASS). This is used to extract plaintext passwords, NTLM hashes, and Kerberos tickets.",
@@ -259,7 +259,7 @@ export const CRED_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '4662',
-        'properties': ['*ms-Mcs-AdmPwd*'] // LAPS Password Attribute GUID
+        'directory_service.properties': ['*ms-Mcs-AdmPwd*'] // LAPS Password Attribute GUID
       }
     },
     description: "Attacker queried the 'ms-Mcs-AdmPwd' attribute from Active Directory. This reveals the plaintext Local Administrator password managed by LAPS.",

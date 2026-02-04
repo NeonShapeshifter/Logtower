@@ -155,8 +155,8 @@ export const PERSISTENCE_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '7', // Sysmon Image Load
-        'image': ['!*\\Windows\\System32*', '!*\\Program Files*'], // Legitimate binary in weird spot
-        'image_loaded': ['*user32.dll', '*kernel32.dll'] // Loading common DLLs from local dir? 
+        'process.image': ['!*\\Windows\\System32*', '!*\\Program Files*'], // Legitimate binary in weird spot
+        'image_load.file_path': ['*user32.dll', '*kernel32.dll'] // Loading common DLLs from local dir?
         // Detection is hard without specific known bad pairings
       }
     },
@@ -214,8 +214,8 @@ export const PERSISTENCE_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '7', // Sysmon Image Load
-        'image_loaded': ['*version.dll', '*sspicli.dll', '*userenv.dll', '*uxtheme.dll'], // Common targets
-        'image': ['!c:\\windows\\system32*', '!c:\\windows\\syswow64*'] // Loaded by binary OUTSIDE of System32
+        'image_load.file_path': ['*version.dll', '*sspicli.dll', '*userenv.dll', '*uxtheme.dll'], // Common targets
+        'process.image': ['!c:\\windows\\system32*', '!c:\\windows\\syswow64*'] // Loaded by binary OUTSIDE of System32
       }
     },
     description: "Placing a malicious DLL with a legitimate name (e.g., version.dll) in the application's directory. Windows loads this DLL before the system one.",

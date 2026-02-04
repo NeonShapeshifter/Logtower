@@ -143,9 +143,10 @@ export function normalizeEvent(raw: any): any {
 
         // Process Access (10)
         else if (eventId === 10) {
-             event.process.image = data.SourceImage; 
+             event.process.image = data.SourceImage;
              event.process.target_image = data.TargetImage;
              event.process.granted_access = data.GrantedAccess;
+             event.process.call_trace = data.CallTrace;
         }
 
         // Registry (12, 13, 14)
@@ -231,6 +232,21 @@ export function normalizeEvent(raw: any): any {
         else if (eventId === 4698) {
             event.task.task_name = data.TaskName;
             event.task.xml = JSON.stringify(data); // Capture full XML/Data for content matching
+        }
+
+        // Directory Service Access (4662)
+        else if (eventId === 4662) {
+            event.user.name = data.SubjectUserName;
+            event.user.domain = data.SubjectDomainName;
+            event.directory_service.object_type = data.ObjectType;
+            // Properties can be a single GUID or comma-separated GUIDs
+            const props = data.Properties;
+            if (props) {
+                // If it's a comma-separated string, split it into an array
+                event.directory_service.properties = typeof props === 'string' && props.includes(',')
+                    ? props.split(',').map((p: string) => p.trim())
+                    : props;
+            }
         }
 
         // User Account Management (4720, 4722, etc)

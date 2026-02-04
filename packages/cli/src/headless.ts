@@ -83,12 +83,12 @@ export const runHeadless = async (
     let intelHits = 0;
 
     // Stream Processor Function
-    const processStream = (stream: any) => {
+    const processStream = (stream: any, proc?: any) => {
         stream.on('data', (data: any) => {
             const lines = data.toString().split('\n');
             for (const line of lines) {
                 if (processedCount >= limitCount) {
-                    if (isEvtx && proc) proc.kill();
+                    if (proc) proc.kill();
                     else if (stream.destroy) stream.destroy();
                     break;
                 }
@@ -120,9 +120,9 @@ export const runHeadless = async (
             }
         });
 
-        if (isEvtx) {
-             stream.stderr.on('data', () => {});
-             stream.on('close', () => finish());
+        if (proc) {
+             proc.stderr.on('data', () => {});
+             proc.on('close', () => finish());
         } else {
              stream.on('end', () => finish());
              stream.on('error', (err: any) => console.error(err));
@@ -132,7 +132,7 @@ export const runHeadless = async (
     let proc: any;
     if (isEvtx && rustParser) {
         proc = spawn(rustParser, [filePath]);
-        processStream(proc.stdout);
+        processStream(proc.stdout, proc);
     } else {
         const fileStream = fs.createReadStream(filePath, { encoding: 'utf8' });
         processStream(fileStream);

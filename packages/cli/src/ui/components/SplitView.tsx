@@ -163,14 +163,13 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
         if (raw['TaskContent']) details += `Content Snippet: ${raw['TaskContent'].substring(0, 100)}...\n`;
     }
 
-    const evidenceList = f.evidence.slice(-3).map((e: any, i: number) => 
+    const evidenceList = f.evidence.slice(-3).map((e: any, i: number) =>
         `• [${e.event_ts.split('T')[1]?.split('.')[0] || e.event_ts}] ${e.summary}`
     ).join('\n');
 
     return `${details}\n` +
-           `[DESCRIPTION]\n${f.description}\n\n` +
            `[RECENT EVIDENCE (${f.evidence.length})]\n${evidenceList}\n\n` +
-           `[MITRE]: ${f.mitre?.join(', ') || 'N/A'}`;
+           `Use 'info ${f.rule_id}' for full details, MITRE mapping, and response steps.`;
   }, [activeFinding]);
 
   const inspectorLines = useMemo(() => inspectorContent.split('\n'), [inspectorContent]);

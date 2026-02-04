@@ -10,7 +10,7 @@ export const DEFENSE_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '25', // Sysmon: Process Tampering (or 10 with specific flags)
-        'image': ['*svchost.exe', '*explorer.exe', '*notepad.exe', '*calc.exe'], // Common targets
+        'process.image': ['*svchost.exe', '*explorer.exe', '*notepad.exe', '*calc.exe'], // Common targets
         'type': 'Image is replaced' // Conceptual mapping
       }
     },
@@ -51,8 +51,8 @@ export const DEFENSE_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '10', // Sysmon ProcessAccess or specific EDR alerts
-        'target_image': '*amsi.dll',
-        'call_trace': '*AmsiScanBuffer*' // Crude approx, usually requires EDR
+        'process.target_image': '*amsi.dll',
+        'process.call_trace': '*AmsiScanBuffer*' // Crude approx, usually requires EDR
       }
     },
     description: "The attacker patched 'amsi.dll' in memory to disable the Antimalware Scan Interface. This allows them to run malicious PowerShell scripts without AV detection.",
@@ -129,8 +129,8 @@ export const DEFENSE_RULES: Rule[] = [
       selection: {
         // Hard to detect with simple sigma, usually requires mismatched parent create times
         'event_id': '1',
-        'parent_image': '*explorer.exe', // Spoofed to look like user launched it
-        'command_line': '*powershell*'
+        'process.parent_image': '*explorer.exe', // Spoofed to look like user launched it
+        'process.command_line': '*powershell*'
       }
     },
     description: "The attacker launched a process but manually set its 'Parent Process ID' to a legitimate process (like explorer.exe or spoolsv.exe) to break the process tree analysis.",
@@ -168,8 +168,8 @@ export const DEFENSE_RULES: Rule[] = [
     detection: {
       selection: {
         'event_id': '10', // Sysmon Process Access
-        'source_image': '*powershell.exe',
-        'target_image': '*rundll32.exe' // Common pattern
+        'process.source_image': '*powershell.exe',
+        'process.target_image': '*rundll32.exe' // Common pattern
       }
     },
     description: "Loading a DLL directly from memory into a process, without the DLL ever touching the disk (No LoadLibrary call). Used by Cobalt Strike and Metasploit.",
@@ -209,8 +209,8 @@ export const DEFENSE_RULES: Rule[] = [
         // Specific API calls: GlobalAddAtom, NtQueueApcThread
         // Hard to detect via logs without EDR telemetry on API calls.
         // Using a proxy indicator:
-        'target_image': '*explorer.exe',
-        'start_address': '0x00000000' // Often anomalous start address
+        'process.target_image': '*explorer.exe',
+        'process.start_address': '0x00000000' // Often anomalous start address
       }
     },
     description: "Injecting code into the Global Atom Table and forcing a legitimate process to retrieve and execute it via APC calls. Bypasses many memory scanners.",
