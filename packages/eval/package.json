@@ -1,6 +1,6 @@
 {
   "name": "@neonshapeshifter/logtower-eval",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "scripts": {
     "build": "tsc",
     "test": "echo 'Eval tests passed'",

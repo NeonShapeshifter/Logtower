@@ -50,7 +50,10 @@ export function runHunt(
   let rustParser: string;
   try {
       rustParser = resolveParserBinary();
+      console.log("[DEBUG] Rust parser path:", rustParser);
+      console.log("[DEBUG] Target file:", filePath);
   } catch (e: any) {
+      console.log("[DEBUG] Failed to resolve parser:", e.message);
       return { success: false, error: e.message };
   }
 
@@ -84,9 +87,12 @@ export function runHunt(
   }
 
   try {
+    console.log("[DEBUG] Spawning parser...");
     const proc = spawn(rustParser, [filePath]);
+    console.log("[DEBUG] Parser spawned, PID:", proc.pid);
 
     proc.stdout.on('data', (data) => {
+      console.log("[DEBUG] Received data from parser");
       const lines = data.toString().split('\n');
       const newLogs: LogtowerEvent[] = [];
 
@@ -126,8 +132,8 @@ export function runHunt(
       }));
     });
 
-    proc.stderr.on('data', (_data) => {
-      // Could log errors here if needed
+    proc.stderr.on('data', (data) => {
+      console.log("[DEBUG] Parser stderr:", data.toString());
     });
 
     proc.on('close', async (_code) => {
@@ -171,6 +177,7 @@ export function runHunt(
     return { success: true };
 
   } catch (e: any) {
+    console.log("[DEBUG] Caught error in runHunt:", e.message, e.stack);
     setState(prev => ({
       ...prev,
       view: 'VIEW_ERROR',
