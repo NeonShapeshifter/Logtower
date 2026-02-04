@@ -26,6 +26,46 @@ export type DispatchResult = {
 };
 
 /**
+ * Parse command line respecting quoted arguments
+ * Handles: hunt "path with spaces" --flag value
+ */
+function parseCommandLine(input: string): string[] {
+  const args: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  let quoteChar = '';
+
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+
+    if ((char === '"' || char === "'") && (i === 0 || input[i - 1] !== '\\')) {
+      if (!inQuotes) {
+        inQuotes = true;
+        quoteChar = char;
+      } else if (char === quoteChar) {
+        inQuotes = false;
+        quoteChar = '';
+      } else {
+        current += char;
+      }
+    } else if (char === ' ' && !inQuotes) {
+      if (current) {
+        args.push(current);
+        current = '';
+      }
+    } else {
+      current += char;
+    }
+  }
+
+  if (current) {
+    args.push(current);
+  }
+
+  return args;
+}
+
+/**
  * Dispatch a command to the appropriate handler
  * Returns action to be taken by the App component
  */
@@ -34,9 +74,16 @@ export function dispatchCommand(
   ctx: CommandContext,
   exit: () => void
 ): DispatchResult {
-  const parts = rawInput.trim().split(/\s+/);
-  const rawCommand = parts[0].toLowerCase();
+  const parts = parseCommandLine(rawInput.trim());
+  const rawCommand = parts[0]?.toLowerCase() || '';
   const args = parts.slice(1);
+
+  // DEBUG: Show parsed arguments
+  console.log("[DEBUG] Raw input:", JSON.stringify(rawInput));
+  console.log("[DEBUG] Parsed parts:", JSON.stringify(parts));
+  console.log("[DEBUG] Command:", rawCommand);
+  console.log("[DEBUG] Args:", JSON.stringify(args));
+
   const command = COMMAND_ALIASES[rawCommand] || rawCommand;
 
   const { getState, setState, showError, goBackToSplash } = ctx;
