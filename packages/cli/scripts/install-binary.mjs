@@ -9,14 +9,16 @@ const __dirname = path.dirname(__filename);
 
 // CONFIGURATION
 // TODO: Replace with your actual GitHub User/Repo
-const REPO = "NeonShapeshifter/Logtower"; 
+const REPO = "NeonShapeshifter/Logtower";
 const BIN_NAME = "logtower-parser";
 const DEST_DIR = path.join(__dirname, '../bin');
-const DEST_PATH = path.join(DEST_DIR, BIN_NAME);
 
 // Detect Platform
 const PLATFORM = process.platform;
 const ARCH = process.arch;
+
+// Set destination path with correct extension for Windows
+const DEST_PATH = path.join(DEST_DIR, PLATFORM === 'win32' ? `${BIN_NAME}.exe` : BIN_NAME);
 
 const SUPPORTED_PLATFORMS = {
     'win32': 'win-x64.exe',

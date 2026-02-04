@@ -1,6 +1,6 @@
 {
   "name": "logtower-monorepo",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Portable threat hunting and forensic triage suite",
   "private": true,
   "workspaces": [
