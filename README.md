@@ -33,7 +33,7 @@ Total Findings: 15
   [CRITICAL] Mimikatz Specific Access Mask (2)
 ```
 
-![Logtower TUI](https://github.com/user-attachments/assets/e26090e2-3812-4f02-baff-65e9efaad3d0)
+![Logtower TUI](https://github.com/user-attachments/assets/5ef14de0-7383-4b5c-ada3-5f9a6f17c0c8)
 *5-panel interactive interface: Event Stream (left),Log detail, Critical Findings, Detection Report and Deep Inspector (right)*
 
 ## ✅ Validated Against Real Threats
