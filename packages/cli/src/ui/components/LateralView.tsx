@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { Box, Text, useInput, useApp } from 'ink';
 import { GraphNode, GraphEdge } from '@neonshapeshifter/logtower-engine';
 
 type LateralViewProps = {
@@ -18,11 +18,13 @@ type LateralViewProps = {
 };
 
 export const LateralView = ({ graph, onBack }: LateralViewProps) => {
+  const { exit } = useApp();
   const [viewMode, setViewMode] = useState<'TREE' | 'TABLE'>('TREE');
 
   useInput((input, key) => {
-    if (key.escape || input === 'q') {
+    if (key.escape) {
       onBack();
+      return;
     }
     if (key.tab || input === 'v') {
       setViewMode(prev => prev === 'TREE' ? 'TABLE' : 'TREE');

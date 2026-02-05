@@ -1,6 +1,6 @@
 {
   "name": "@neonshapeshifter/logtower",
-  "version": "0.1.16",
+  "version": "1.0.0",
   "author": "NeonShapeshifter <201814081+NeonShapeshifter@users.noreply.github.com>",
   "type": "module",
   "files": [
@@ -27,7 +27,7 @@
   "dependencies": {
     "@neonshapeshifter/logtower-core": "*",
     "@neonshapeshifter/logtower-engine": "*",
-    "@neonshapeshifter/logtower-rules": "^0.1.0",
+    "@neonshapeshifter/logtower-rules": "^1.0.0",
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
     "commander": "^14.0.2",

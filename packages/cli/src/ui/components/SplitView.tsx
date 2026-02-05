@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { Box, Text, useInput, useApp } from 'ink';
 import { Finding, getSampleEvidence, sortFindings, filterFindings, FilterMode } from '@neonshapeshifter/logtower-core';
 import { useWindowSize } from '../hooks/useWindowSize.js';
 import { useHuntSummary } from '../hooks/useHuntSummary.js';
@@ -12,6 +12,7 @@ function clamp(n: number, min: number, max: number) {
 }
 
 export const SplitView = ({ logs, findings, processedCount, isProcessing, activeEngines, ruleset, onBack, onCancel, replVisible, onToggleRepl, intelStatus }: SplitViewProps) => {
+  const { exit } = useApp();
   const [columns, rows] = useWindowSize();
   const [filterMode, setFilterMode] = useState<FilterMode>('IMPORTANT');
   const [showWarning, setShowWarning] = useState(false);
@@ -188,8 +189,12 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
 
     // 2. If REPL is visible (Write Mode), block navigation
     if (replVisible) {
-        if (key.ctrl && input === 'c' && isProcessing) {
-             onCancel();
+        if (key.ctrl && input === 'c') {
+             if (isProcessing) {
+                 onCancel();
+             } else {
+                 exit();
+             }
         }
         if (key.escape && !isProcessing) {
             onBack();
@@ -199,8 +204,8 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
 
     // 3. Navigation Mode (replVisible = false)
 
-    // Back Logic (Esc, q)
-    if (key.escape || input === 'q') {
+    // Back Logic (Esc)
+    if (key.escape) {
         if (isProcessing) {
             setShowWarning(true);
             return;
@@ -213,6 +218,8 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
     if (key.ctrl && input === 'c') {
         if (isProcessing) {
             onCancel();
+        } else {
+            exit();
         }
         return; 
     }

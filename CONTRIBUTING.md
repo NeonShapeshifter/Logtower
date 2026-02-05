@@ -11,7 +11,7 @@ We welcome contributions! Logtower is a monorepo managed with npm workspaces.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-org/logtower.git
+    git clone https://github.com/neonshapeshifter/logtower.git
     cd logtower
     ```
 
@@ -38,23 +38,29 @@ We welcome contributions! Logtower is a monorepo managed with npm workspaces.
 ### Adding a New Rule
 Rules are written in TypeScript in `packages/rules/src`.
 
-1.  Create a file (e.g., `packages/rules/src/my_new_rule.ts`).
-2.  Define the rule using the `Rule` interface:
+1.  Create a file (e.g., `packages/rules/src/custom_rules.ts`).
+2.  Define the rule using the `Rule` interface. **Ensure you include a Description and Response Steps!**
     ```typescript
     import { Rule } from '@neonshapeshifter/logtower-engine';
 
     export const MY_RULE: Rule = {
-        id: 'CUSTOM_001',
+        id: 'CUSTOM_001_CMD_SUSP',
         title: 'Suspicious Cmd Usage',
         severity: 'HIGH',
-        module: 'custom',
-        description: 'Detects cmd.exe being used in a weird way.',
+        module: 'EXECUTION',
+        mitre: ['T1059.003'],
+        description: 'Detects cmd.exe executing PowerShell, often used by malware to chain execution methods.',
         detection: {
             selection: {
                 'process.image': '*\\cmd.exe',
-                'process.command_line': ['* /c powershell *', '* /k *']
+                'process.command_line': ['* /c powershell *', '* /k powershell *']
             }
-        }
+        },
+        response_steps: [
+            "1. PARENT: Check what process spawned this cmd.exe.",
+            "2. DECODE: Look for encoded PowerShell commands in the arguments.",
+            "3. ISOLATE: Likely stage 1 of an infection."
+        ]
     };
     ```
 3.  Export it in `packages/rules/src/index.ts`.
@@ -70,4 +76,3 @@ To create a portable build (including the binary):
 npm run build:all
 ```
 This ensures the Rust binary is copied to `packages/cli/bin/`, making the CLI package self-contained.
-

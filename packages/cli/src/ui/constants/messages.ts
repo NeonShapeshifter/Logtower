@@ -103,13 +103,13 @@ export const HELP_TEXT = {
 
   // Keyboard shortcuts
   SHORTCUTS: {
-    ESC_BACK: 'ESC / Q          Return to splash',
+    ESC_BACK: 'ESC: Back',
     TAB_TOGGLE: 'TAB              Toggle REPL visibility',
-    CTRL_C: 'Ctrl+C           Cancel operation',
-    ARROWS: '↑/↓ Select | Enter: Details | ESC: Exit',
-    TAB_VIEW: 'TAB: Switch View | q: Quit',
-    NAV_MODE: 'TAB: Nav Mode | Ctrl+C: cancel',
-    WRITE_MODE: 'TAB: Write Mode | Esc/q: back | f: filter | s: summary',
+    CTRL_C: 'Ctrl+C           Cancel operation / Exit',
+    ARROWS: '↑/↓ Select | Enter: Details | ESC: Back',
+    TAB_VIEW: 'TAB: Switch View | ESC: Back',
+    NAV_MODE: 'TAB: Nav Mode | Ctrl+C: cancel/exit',
+    WRITE_MODE: 'TAB: Write Mode | Esc: back | f: filter | s: summary',
     PGUP_PGDN: (offset: number, max: number) => `${offset}/${max} (PgUp/PgDn)`,
   },
 
@@ -117,9 +117,9 @@ export const HELP_TEXT = {
   TIP_TITLE: '[PRO TIP]',
   TIP_TAB: "Try 'hunt evidence.evtx --ruleset lateral' for focused analysis.",
   TIP_ESC: "Type 'help' to see advanced flags and usage examples.",
-  RETURN_HINT: 'Press ESC or Q to return',
-  RETURN_TO_MENU: 'Press ESC or Q to return to menu.',
-  RETURN_TO_LIST: "Press 'q' or 'ESC' to return to list.",
+  RETURN_HINT: 'Press ESC to return',
+  RETURN_TO_MENU: 'Press ESC to return to menu.',
+  RETURN_TO_LIST: "Press 'ESC' to return to list.",
 } as const;
 
 // Inspector section headers

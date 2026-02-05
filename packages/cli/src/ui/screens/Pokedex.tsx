@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { Box, Text, useInput, useApp } from 'ink';
 import { Rule } from '@neonshapeshifter/logtower-engine';
 
 type PokedexProps = {
@@ -72,18 +72,19 @@ const DetailView = ({ rule }: { rule: Rule }) => {
             </Box>
             
             <Box marginTop={0}>
-                <Text dimColor>Press 'q' or 'ESC' to return to list.</Text>
+                <Text dimColor>Press 'ESC' to return to list, 'q' to exit.</Text>
             </Box>
         </Box>
     );
 };
 
 export const Pokedex = ({ matches, onBack }: PokedexProps) => {
+    const { exit } = useApp();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [viewMode, setViewMode] = useState<'LIST' | 'DETAIL'>(matches.length === 1 ? 'DETAIL' : 'LIST');
 
     useInput((input, key) => {
-        if (key.escape || input === 'q') {
+        if (key.escape) {
             if (viewMode === 'DETAIL' && matches.length > 1) {
                 setViewMode('LIST');
             } else {

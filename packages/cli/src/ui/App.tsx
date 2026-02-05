@@ -58,7 +58,7 @@ export const App = ({ ruleset = DEFAULTS.RULESET, initialFile }: AppProps) => {
   // Global input handler for ESC in help/error views
   useInput((input, key) => {
     if (state.view === 'VIEW_HELP' || state.view === 'VIEW_ERROR') {
-      if (key.escape || input === 'q') {
+      if (key.escape) {
         goBackToSplash();
       }
     }
