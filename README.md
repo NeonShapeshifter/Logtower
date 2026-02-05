@@ -34,7 +34,7 @@ Total Findings: 15
 ```
 
 ![Logtower TUI](https://github.com/user-attachments/assets/e26090e2-3812-4f02-baff-65e9efaad3d0)
-*4-panel interactive interface: Event Stream (left), Critical Queue, Detection Radar, and Deep Inspector (right)*
+*5-panel interactive interface: Event Stream (left),Log detail, Critical Findings, Detection Report and Deep Inspector (right)*
 
 ## ✅ Validated Against Real Threats
 

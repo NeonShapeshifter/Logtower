@@ -55,7 +55,7 @@ export const LABELS = {
 
   // Panel headers
   EVENT_STREAM: 'EVENT STREAM (45%)',
-  LOG_DETAIL: '(Detalle del Log)',
+  LOG_DETAIL: '(LOG DETAIL)',
   RADAR_ACTIVE: (ruleset: string) => `RADAR (40%) [${ruleset.toUpperCase()}]`,
   RADAR_REPORT: '=== Detection Report ===',
   INSPECTOR: 'INSPECTOR (55%)',

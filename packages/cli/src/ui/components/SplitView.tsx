@@ -6,6 +6,7 @@ import { useHuntSummary } from '../hooks/useHuntSummary.js';
 import { HuntSummary } from './HuntSummary.js';
 import { CriticalQueue } from './IntelQueue.js';
 import { SplitViewProps } from '../types/index.js';
+import { APP_INFO } from '../constants/index.js';
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -34,7 +35,7 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
   }, [showWarning, isProcessing]);
   
   // Layout Math
-  const globalHeaderHeight = 2; // For the box border and text
+  const globalHeaderHeight = 1; // For the box border and text
   const footerHeight = 3; 
   const bodyHeight = Math.max(10, rows - footerHeight - globalHeaderHeight); 
 
@@ -269,7 +270,7 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
     <Box flexDirection="column" height={rows}>
         {/* GLOBAL HEADER */}
         <Box borderStyle="single" height={globalHeaderHeight + 2} borderColor="white" justifyContent="space-between">
-            <Text bold>HEADER: Logtower v1.0</Text>
+            <Text bold>Logtower {APP_INFO.VERSION}</Text>
             {criticalCount > 0 ? (
                 <Text bold color="red">[!] CRITICAL: {criticalCount} threats detected</Text>
             ) : (
@@ -294,7 +295,7 @@ export const SplitView = ({ logs, findings, processedCount, isProcessing, active
                 </Box>
                 {/* LOG DETAIL (Bottom Left) */}
                 <Box flexDirection="column" height={detailHeight} borderStyle="single" borderColor="grey" marginTop={0}>
-                    <Text bold color="white" underline>(Detalle del Log)</Text>
+                    <Text bold color="white" underline>(LOG DETAIL)</Text>
                     <Box marginTop={1} overflow="hidden">
                         <Text color="grey" wrap="wrap">
                             {latestLog ? JSON.stringify(latestLog.raw || latestLog, null, 2) : "Waiting for logs..."}
